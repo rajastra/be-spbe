@@ -6,6 +6,8 @@ const userRouter = require('./routes/userRoutes');
 const profileRouter = require('./routes/profileRoutes');
 const galeriRouter = require('./routes/galeriRoutes');
 const imageRouter = require('./routes/imageRoutes');
+const fileRouter = require('./routes/fileRoutes');
+const regulasiRouter = require('./routes/regulasiRoutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errController');
 
@@ -21,6 +23,8 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/profiles', profileRouter);
 app.use('/api/v1/galeris', galeriRouter);
 app.use('/api/v1/image', imageRouter);
+app.use('/api/v1/file', fileRouter);
+app.use('/api/v1/regulations', regulasiRouter);
 
 app.use('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

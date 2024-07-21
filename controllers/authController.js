@@ -50,29 +50,6 @@ exports.login = catchAsync(async (req, res, next) => {
   createSendToken(user, 200, res);
 });
 
-exports.subscription = catchAsync(async (req, res, next) => {
-  const { id } = req.body;
-
-  if (!id) {
-    return next(new AppError('Mohon masukan id', 400));
-  }
-
-  const hasil = await User.findByPk(id, {
-    attributes: ['subscription'],
-  });
-
-  if (!hasil) {
-    return next(new AppError('User tidak ditemukan', 404));
-  }
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      subscription: hasil.dataValues.subscription,
-    },
-  });
-});
-
 exports.protect = catchAsync(async (req, res, next) => {
   // getting token and check of it's there
   let token;
