@@ -2,11 +2,11 @@ const { Op } = require('sequelize');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
-const Regulasi = require('../models/regulasiModel');
+const Indikator = require('../models/indikatorModel');
 const handlerFactory = require('./handlerFactory');
 require('dotenv').config();
 
-exports.getAllRegulasi = catchAsync(async (req, res, next) => {
+exports.getAllIndikator = catchAsync(async (req, res, next) => {
   const { page = 1, limit = 10, keyword = '' } = req.query;
 
   const offset = (page - 1) * limit;
@@ -15,14 +15,14 @@ exports.getAllRegulasi = catchAsync(async (req, res, next) => {
   if (keyword) {
     whereClause = {
       where: {
-        title: {
+        nama: {
           [Op.like]: `%${keyword}%`,
         },
       },
     };
   }
 
-  const total = await Regulasi.count(whereClause);
+  const total = await Indikator.count(whereClause);
 
   let findAllOptions = {
     limit: parseInt(limit, 10),
@@ -33,12 +33,12 @@ exports.getAllRegulasi = catchAsync(async (req, res, next) => {
     findAllOptions = Object.assign(findAllOptions, whereClause);
   }
 
-  const regulasi = await Regulasi.findAll(findAllOptions);
+  const indikator = await Indikator.findAll(findAllOptions);
 
   res.status(200).json({
     status: 'success',
-    results: regulasi.length,
-    data: regulasi,
+    results: indikator.length,
+    data: indikator,
     meta: {
       total,
       per_page: parseInt(limit, 10),
@@ -46,46 +46,45 @@ exports.getAllRegulasi = catchAsync(async (req, res, next) => {
     },
   });
 });
-
-exports.createRegulasi = catchAsync(async (req, res, next) => {
-  const regulasi = await Regulasi.create(req.body);
+exports.createIndikator = catchAsync(async (req, res, next) => {
+  const indikator = await Indikator.create(req.body);
 
   res.status(201).json({
     status: 'success',
     data: {
-      regulasi,
+      regulasi: indikator,
     },
   });
 });
 
-exports.updateRegulasi = catchAsync(async (req, res, next) => {
+exports.updateIndikator = catchAsync(async (req, res, next) => {
   // Find the berita record by ID
-  const regulasi = await Regulasi.findByPk(req.params.id);
+  const indikator = await Indikator.findByPk(req.params.id);
 
-  if (!regulasi) {
+  if (!indikator) {
     return next(new AppError('No document found with that ID', 404));
   }
 
   // Update the berita record with the new data
-  await regulasi.update(req.body);
+  await indikator.update(req.body);
 
   res.status(200).json({
     status: 'success',
-    data: regulasi,
+    data: indikator,
   });
 });
 
-exports.getRegulasi = catchAsync(async (req, res, next) => {
-  const regulasi = await Regulasi.findByPk(req.params.id);
+exports.getIndikator = catchAsync(async (req, res, next) => {
+  const indikator = await Indikator.findByPk(req.params.id);
 
-  if (!regulasi) {
+  if (!indikator) {
     return next(new AppError('No document found with that ID', 404));
   }
 
   res.status(200).json({
     status: 'success',
-    data: regulasi,
+    data: indikator,
   });
 });
 
-exports.deleteRegulasi = handlerFactory.deleteOne(Regulasi);
+exports.deleteIndikator = handlerFactory.deleteOne(Indikator);
